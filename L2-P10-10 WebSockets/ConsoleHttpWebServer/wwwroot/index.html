@@ -19,6 +19,14 @@
             <button id="list">Party list</button>
             <br />
             <a href="vote.html">Join party</a>
+            <br />
+            <br />
+
+
+            <div id="socket-area" class="socket-area">
+            </div>
+            <input id="socket-text">
+            <button id="sendMessage">Send</button>
         </div>
     </div>
 
@@ -34,20 +42,25 @@
             }
         };
 
+        document.getElementById("sendMessage").onclick = function () {
+            var text = document.getElementById("socket-text").value;
+            socket.send(text);
+        }
+
         var socket = new WebSocket("ws://localhost:8881");
         socket.onmessage = function (event) {
             var message = document.createElement("div");
             message.innerHTML = event.data;
-            document.body.appendChild(message);
+            document.getElementById("socket-area").appendChild(message);
         };
         socket.onopen = function () {
-            socket.send("Привет!");
+            //socket.send("Привет!");
         }
         socket.onclose = function (event) {
             if (event.wasClean) {
                 console.log('Соединение закрыто чисто');
             } else {
-                console.log('Обрыв соединения'); // например, "убит" процесс сервера
+                console.log('Обрыв соединения');
             }
             console.log('Код: ' + event.code + ' причина: ' + event.reason);
         };

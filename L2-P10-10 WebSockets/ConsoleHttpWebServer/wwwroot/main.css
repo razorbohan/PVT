@@ -13,7 +13,13 @@ body {
     margin: auto;
 }
 
-    /*.content button {
+    .content .socket-area {
+        background-color: azure;
+        width: 700px;
+        height: 300px;
+    }
+
+/*.content button {
         padding: 10px;
         border-radius: 20px;
         background: deepskyblue;

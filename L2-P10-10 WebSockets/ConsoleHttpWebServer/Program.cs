@@ -33,10 +33,12 @@ namespace ConsoleHttpWebServer
     {
         public int Port { get; set; }
         private HttpListener HttpListener { get; set; }
+        private List<WebSocket> WebSocketClients { get; set; }
 
         public HttpWebServer(int port)
         {
             Port = port;
+            WebSocketClients = new List<WebSocket>();
         }
 
         public void Create()
@@ -54,13 +56,15 @@ namespace ConsoleHttpWebServer
             var request = context.Request;
             var response = context.Response;
 
-            try
+            if (context.Request.IsWebSocketRequest)
             {
-                if (context.Request.IsWebSocketRequest)
+                HandleWebsocket(context);
+            }
+            else
+            {
+                try
                 {
-                    HandleWebsocket(context);
-                }
-                else switch (request.HttpMethod)
+                    switch (request.HttpMethod)
                     {
                         case "GET":
                             HandleGet(response, request);
@@ -69,10 +73,11 @@ namespace ConsoleHttpWebServer
                             HandlePost(response, request);
                             break;
                     }
-            }
-            finally
-            {
-                response.OutputStream.Close();
+                }
+                finally
+                {
+                    response.OutputStream.Close();
+                }
             }
         }
 
@@ -112,14 +117,11 @@ namespace ConsoleHttpWebServer
                     }
                     else
                     {
-                        using (var pageStream = new StreamReader("wwwroot/participants.html"))
-                        {
-                            var page = GeneratePage();
-                            var bytes = Encoding.UTF8.GetBytes(page);
-                            response.ContentLength64 = bytes.Length;
+                        var page = GeneratePage();
+                        var bytes = Encoding.UTF8.GetBytes(page);
+                        response.ContentLength64 = bytes.Length;
 
-                            new MemoryStream(bytes).CopyTo(response.OutputStream);
-                        }
+                        new MemoryStream(bytes).CopyTo(response.OutputStream);
                     }
                 }
                 else
@@ -178,7 +180,8 @@ namespace ConsoleHttpWebServer
                 return;
             }
 
-            WebSocket webSocket = webSocketContext.WebSocket;
+            var webSocket = webSocketContext.WebSocket;
+            WebSocketClients.Add(webSocket);
 
             try
             {
@@ -194,8 +197,13 @@ namespace ConsoleHttpWebServer
                     }
                     else if (receiveResult.MessageType == WebSocketMessageType.Text)
                     {
-                        //await webSocket.CloseAsync(WebSocketCloseStatus.InvalidMessageType, "Cannot accept text frame", CancellationToken.None);
-                        await webSocket.SendAsync(new ArraySegment<byte>(receiveBuffer, 0, receiveResult.Count), WebSocketMessageType.Binary, receiveResult.EndOfMessage, CancellationToken.None);
+                        var receivedString = Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count);
+                        WebSocketClients.ForEach(async client => await client.SendAsync(
+                            new ArraySegment<byte>(Encoding.UTF8.GetBytes(receivedString)), 
+                            WebSocketMessageType.Text, 
+                            true, 
+                            CancellationToken.None)
+                        );
                     }
                 }
             }
