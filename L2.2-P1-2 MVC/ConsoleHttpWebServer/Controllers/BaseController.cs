@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Net;
-using System.Text;
+using ConsoleHttpWebServer.Models;
 
 namespace ConsoleHttpWebServer.Controllers
 {
     abstract class BaseController
     {
-        public abstract string Handle(HttpListenerRequest request, HttpListenerResponse response);
+        public ParticipantRepository Repository { get; set; }
 
-        protected string GetView(string viewName)
+        protected BaseController(ParticipantRepository repository)
         {
-            return "";
+            Repository = repository;
         }
+
+        //public abstract StreamReader GetView(string viewName);
+        public abstract void Handle(HttpListenerContext context);
     }
 }

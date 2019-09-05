@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using ConsoleHttpWebServer.Controllers;
+using ConsoleHttpWebServer.Models;
 using Newtonsoft.Json;
 
 namespace ConsoleHttpWebServer
@@ -25,7 +27,6 @@ namespace ConsoleHttpWebServer
                     server.Listen();
                 }
             }
-
         }
     }
 
@@ -56,6 +57,12 @@ namespace ConsoleHttpWebServer
             var request = context.Request;
             var response = context.Response;
 
+            var repository = new ParticipantRepository();
+
+            var indexController = new IndexController(repository);
+            var voteController = new VoteController(repository);
+            var participantsController = new ParticipantsController(repository);
+
             if (context.Request.IsWebSocketRequest)
             {
                 HandleWebsocket(context);
@@ -64,13 +71,23 @@ namespace ConsoleHttpWebServer
             {
                 try
                 {
-                    switch (request.HttpMethod)
+                    var fileName = request.RawUrl.Substring(1);
+                    fileName = string.IsNullOrWhiteSpace(fileName) ? "index.html" : fileName;
+                    Console.WriteLine($"Client is looking for {fileName}");
+
+                    switch (fileName)
                     {
-                        case "GET":
-                            HandleGet(response, request);
+                        case "index.html":
+                            indexController.Handle(context);
                             break;
-                        case "POST":
-                            HandlePost(response, request);
+                        case "vote.html":
+                            voteController.Handle(context);
+                            break;
+                        case "participants.html":
+                            participantsController.Handle(context);
+                            break;
+                        default:
+                            HandleStaticFile(context);
                             break;
                     }
                 }
@@ -81,107 +98,24 @@ namespace ConsoleHttpWebServer
             }
         }
 
-        private void HandleGet(HttpListenerResponse response, HttpListenerRequest request)
+        private void HandleStaticFile(HttpListenerContext context)
         {
+            var request = context.Request;
+            var response = context.Response;
             var fileName = request.RawUrl.Substring(1);
-            fileName = string.IsNullOrWhiteSpace(fileName) ? "index.html" : fileName;
 
-            Console.WriteLine($"Client is looking for {fileName}");
+            if (fileName.EndsWith(".css"))
+                response.ContentType = "text/css";
+            else if (fileName.EndsWith(".js"))
+                response.ContentType = "text/javascript";
+
 
             var fullFilePath = Path.GetFullPath(Path.Combine("wwwroot", fileName));
 
-            if (!File.Exists(fullFilePath))
-            {
-                response.ContentLength64 = 0;
-                response.StatusCode = 404;
-                response.StatusDescription = "File not found";
-                response.OutputStream.Close();
-
-                return;
-            }
-
-            response.ContentType = "text/html";
-
             using (var fileStream = File.OpenRead(fullFilePath))
             {
-                if (fileName == "participants.html")
-                {
-                    if (CheckIfCached("participants.html"))
-                    {
-                        Console.WriteLine("Taking from cache: participants.html");
-                        using (var cachedStream = File.OpenRead("cache/participants.html"))
-                        {
-                            response.ContentLength64 = new FileInfo("cache/participants.html").Length;
-                            cachedStream.CopyTo(response.OutputStream);
-                        }
-                    }
-                    else
-                    {
-                        var page = GeneratePage();
-                        var bytes = Encoding.UTF8.GetBytes(page);
-                        response.ContentLength64 = bytes.Length;
-
-                        new MemoryStream(bytes).CopyTo(response.OutputStream);
-                    }
-                }
-                else
-                {
-                    response.ContentLength64 = new FileInfo(fullFilePath).Length;
-                    fileStream.CopyTo(response.OutputStream);
-                }
-            }
-        }
-
-        private void HandlePost(HttpListenerResponse response, HttpListenerRequest request)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                int count = 0;
-                do
-                {
-                    byte[] buf = new byte[1024];
-                    count = request.InputStream.Read(buf, 0, 1024);
-                    ms.Write(buf, 0, count);
-                } while (request.InputStream.CanRead && count > 0);
-                var b = ms.ToArray();
-
-                File.WriteAllBytes("video.mp4", b);
-            }
-
-            Byte[] bytes;
-            using (var r = new BinaryReader(request.InputStream))
-            {
-                bytes = r.ReadBytes(Convert.ToInt32(request.InputStream.Length));
-            }
-            var mstream = new MemoryStream(bytes);
-            File.WriteAllBytes("video.mp4", bytes);
-
-            var fileName = request.RawUrl.Substring(1);
-            if (fileName == "vote.html")
-            {
-                var body = new StreamReader(request.InputStream).ReadToEnd();
-                var keys = HttpUtility.ParseQueryString(body);
-                var name = keys["name"];
-                var attend = keys["attend"] == "on";
-
-                if (!string.IsNullOrEmpty(name) && attend)
-                {
-                    var json = File.ReadAllText("wwwroot/list.json");
-                    var users = JsonConvert.DeserializeObject<List<Participant>>(json);
-
-                    users.Add(new Participant(name));
-
-                    var newjson = JsonConvert.SerializeObject(users);
-                    File.WriteAllText("wwwroot/list.json", newjson);
-
-                    GeneratePage();
-
-                    response.Redirect("participants.html");
-                }
-                else
-                {
-                    response.Redirect("vote.html");
-                }
+                response.ContentLength64 = new FileInfo(fullFilePath).Length;
+                fileStream.CopyTo(response.OutputStream);
             }
         }
 
@@ -239,45 +173,18 @@ namespace ConsoleHttpWebServer
             }
         }
 
-        private bool CheckIfCached(string filename)
-        {
-            if (!Directory.Exists("cache"))
-                Directory.CreateDirectory("cache");
+        //private bool CheckIfCached(string filename)
+        //{
+        //    if (!Directory.Exists("cache"))
+        //        Directory.CreateDirectory("cache");
 
-            var modification = File.GetLastWriteTime($@"cache\{filename}");
-            return (DateTime.Now - modification).TotalMinutes < 2;
-        }
-
-        private string GeneratePage()
-        {
-            using (var pageStream = new StreamReader("wwwroot/participants.html"))
-            {
-                var tag = "";
-
-                var json = File.ReadAllText("wwwroot/list.json");
-                var users = JsonConvert.DeserializeObject<List<Participant>>(json);
-                users.ForEach(user => tag += $"<li>{user.Name}</li>");
-
-                var page = pageStream.ReadToEnd().Replace("{{participants}}", tag);
-                File.WriteAllText("cache/participants.html", page);
-
-                return page;
-            }
-        }
+        //    var modification = File.GetLastWriteTime($@"cache\{filename}");
+        //    return (DateTime.Now - modification).TotalMinutes < 2;
+        //}
 
         public void Dispose()
         {
             HttpListener.Stop();
-        }
-    }
-
-    class Participant
-    {
-        public string Name { get; set; }
-
-        public Participant(string name)
-        {
-            Name = name;
         }
     }
 }
