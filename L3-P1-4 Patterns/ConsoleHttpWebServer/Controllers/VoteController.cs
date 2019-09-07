@@ -1,21 +1,23 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Web;
+using ConsoleHttpWebServer.Infrastructure;
+using ConsoleHttpWebServer.Logic;
 using ConsoleHttpWebServer.Models;
-using Newtonsoft.Json;
 
 namespace ConsoleHttpWebServer.Controllers
 {
     class VoteController : BaseController
     {
-        public VoteController(ParticipantRepository repository)
-            : base(repository) { }
+        public VoteController(IParticipantsService service, ILogger logger)
+            : base(service, logger) { }
 
         public override void Handle(HttpListenerContext context)
         {
-            var request = context.Request;
             var response = context.Response;
+            var request = context.Request;
+
+            Logger.Info(request.Url.ToString());
 
             if (request.HttpMethod == "GET")
             {
@@ -33,12 +35,14 @@ namespace ConsoleHttpWebServer.Controllers
             {
                 var body = new StreamReader(request.InputStream).ReadToEnd();
                 var keys = HttpUtility.ParseQueryString(body);
+
                 var name = keys["name"];
-                var attend = keys["attend"] == "on";
+                var isAttend = keys["attend"] == "on";
+                var reason = keys["reason"];
 
                 if (!string.IsNullOrEmpty(name))
                 {
-                    Repository.Add(new Participant(name, attend));
+                    Service.Vote(name, isAttend, reason);
 
                     //GeneratePage();
 

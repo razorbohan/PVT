@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace ConsoleHttpWebServer.Logic
+namespace ConsoleHttpWebServer.Infrastructure
 {
     interface ILogger
     {
@@ -16,9 +14,9 @@ namespace ConsoleHttpWebServer.Logic
     {
         private string LogPath { get; }
 
-        public Logger(string logPath)
+        public Logger(string logPath = "log.txt")
         {
-            LogPath = logPath ?? "log.txt";
+            LogPath = logPath;
         }
 
         public void Error(string message)

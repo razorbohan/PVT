@@ -1,25 +1,30 @@
 ﻿using System.IO;
 using System.Net;
 using System.Text;
-using ConsoleHttpWebServer.Models;
+using ConsoleHttpWebServer.Infrastructure;
+using ConsoleHttpWebServer.Logic;
 
 namespace ConsoleHttpWebServer.Controllers
 {
     class ParticipantsController : BaseController
     {
-        public ParticipantsController(ParticipantRepository repository)
-            : base(repository) { }
+        public ParticipantsController(IParticipantsService service, ILogger logger)
+            : base(service, logger) { }
 
         public override void Handle(HttpListenerContext context)
         {
             var response = context.Response;
+            var request = context.Request;
+
+            Logger.Info(request.Url.ToString());
+
             response.ContentType = "text/html";
 
             var fullFilePath = Path.GetFullPath(Path.Combine("Views", "Participants.html"));
 
             using (var fileStream = new StreamReader(fullFilePath))
             {
-                var users = Repository.List();
+                var users = Service.ListAttendent();
 
                 var tag = "";
                 users.ForEach(user => tag += $"<li>{user.Name}</li>");

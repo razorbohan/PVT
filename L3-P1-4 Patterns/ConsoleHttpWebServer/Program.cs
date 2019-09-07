@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using ConsoleHttpWebServer.Controllers;
+using ConsoleHttpWebServer.Infrastructure;
+using ConsoleHttpWebServer.Logic;
 using ConsoleHttpWebServer.Models;
-using Newtonsoft.Json;
 
 namespace ConsoleHttpWebServer
 {
@@ -57,11 +56,13 @@ namespace ConsoleHttpWebServer
             var request = context.Request;
             var response = context.Response;
 
-            var repository = new ParticipantRepository();
+            var logger = new Logger();
+            var repository = new ParticipantsRepository();
+            var service = new ParticipantsService(repository);
 
-            var indexController = new IndexController(repository);
-            var voteController = new VoteController(repository);
-            var participantsController = new ParticipantsController(repository);
+            var indexController = new IndexController(service, logger);
+            var voteController = new VoteController(service, logger);
+            var participantsController = new ParticipantsController(service, logger);
 
             if (context.Request.IsWebSocketRequest)
             {

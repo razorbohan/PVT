@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ConsoleHttpWebServer.Models;
 
 namespace ConsoleHttpWebServer.Logic
 {
     interface IParticipantsService
     {
-        void Vote();
+        void Vote(string name, bool isAttend, string reason);
         List<Participant> ListAll();
         List<Participant> ListAttendent();
         List<Participant> ListMissed();
@@ -16,7 +14,7 @@ namespace ConsoleHttpWebServer.Logic
 
     class ParticipantsService : IParticipantsService
     {
-        private IParticipantRepository Repository { get; set; }
+        private IParticipantRepository Repository { get; }
 
         public ParticipantsService(IParticipantRepository repository)
         {
@@ -25,8 +23,7 @@ namespace ConsoleHttpWebServer.Logic
 
         public void Vote(string name, bool isAttend, string reason)
         {
-            var participant = new Participant(name, isAttend, reason);
-            Repository.Add(participant);
+            Repository.Save(name, isAttend, reason);
         }
 
         public List<Participant> ListAll()
@@ -41,7 +38,7 @@ namespace ConsoleHttpWebServer.Logic
 
         public List<Participant> ListMissed()
         {
-            return Repository.List().Where(x => x.IsAttend).ToList();
+            return Repository.List().Where(x => !x.IsAttend).ToList();
         }
     }
 }

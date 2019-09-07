@@ -1,16 +1,18 @@
-﻿using System.IO;
-using System.Net;
-using ConsoleHttpWebServer.Models;
+﻿using System.Net;
+using ConsoleHttpWebServer.Infrastructure;
+using ConsoleHttpWebServer.Logic;
 
 namespace ConsoleHttpWebServer.Controllers
 {
     abstract class BaseController
     {
-        public ParticipantRepository Repository { get; set; }
+        public IParticipantsService Service { get; set; }
+        public ILogger Logger { get; set; }    
 
-        protected BaseController(ParticipantRepository repository)
+        protected BaseController(IParticipantsService service, ILogger logger)
         {
-            Repository = repository;
+            Service = service;
+            Logger = logger;
         }
 
         //public abstract StreamReader GetView(string viewName);
