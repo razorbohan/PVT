@@ -14,7 +14,12 @@ namespace ConsoleHttpWebServer.Infrastructure
     {
         private string LogPath { get; }
 
-        public Logger(string logPath = "log.txt")
+        public Logger()
+        {
+            LogPath = "log.txt";
+        }
+
+        public Logger(string logPath)
         {
             LogPath = logPath;
         }

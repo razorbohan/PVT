@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ConsoleHttpWebServer.DAL;
 using ConsoleHttpWebServer.Models;
 
 namespace ConsoleHttpWebServer.Logic
@@ -14,9 +15,9 @@ namespace ConsoleHttpWebServer.Logic
 
     class ParticipantsService : IParticipantsService
     {
-        private IParticipantRepository Repository { get; }
+        private IParticipantsRepository Repository { get; }
 
-        public ParticipantsService(IParticipantRepository repository)
+        public ParticipantsService(IParticipantsRepository repository)
         {
             Repository = repository;
         }
