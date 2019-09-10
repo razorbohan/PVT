@@ -1,0 +1,25 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="greetings">
+    <h1>Hollowa!</h1>
+    <p>Го на пати</p>
+</div>
+
+<div class="controls">
+    <a asp-page="/Participants">Party list</a>
+    <br />
+    <a asp-page="/Vote">Join party</a>
+    <br />
+    <br />
+</div>
+
+<div class="chat">
+    <div id="socket-area" class="socket-area">
+    </div>
+    <input id="socket-text">
+    <button id="sendMessage">Send</button>
+</div>
