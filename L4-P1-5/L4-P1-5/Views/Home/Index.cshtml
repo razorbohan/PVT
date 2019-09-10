@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="greetings">
+    <h1>Hollowa!</h1>
+    <p>Го на пати</p>
+</div>
+
+<div class="controls">
+    @Html.ActionLink("Party list", "Index", "Participants")
+    <br>
+    @Html.ActionLink("Join party", "Index", "Vote")
+</div>
