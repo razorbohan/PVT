@@ -59,9 +59,9 @@ namespace ConsoleHttpWebServer
 
             RegisterServices();
 
-            var logger = ServiceLocator.Resolve<ILogger>();
-            var repository = ServiceLocator.Resolve<IParticipantsRepository>();
-            var service = ServiceLocator.Resolve<IParticipantsService>();
+            var logger = ServiceLocator.Resolve(typeof(ILogger)) as ILogger;
+            //var repository = ServiceLocator.Resolve(typeof(IParticipantsRepository)) as IParticipantsRepository;
+            var service = ServiceLocator.Resolve(typeof(IParticipantsService)) as IParticipantsService;
 
             var indexController = new IndexController(service, logger);
             var voteController = new VoteController(service, logger);
@@ -188,9 +188,9 @@ namespace ConsoleHttpWebServer
 
         void RegisterServices()
         {
-            ServiceLocator.Register<ILogger>(typeof(Logger));
-            ServiceLocator.Register<IParticipantsRepository>(typeof(ParticipantsRepository));
-            ServiceLocator.Register<IParticipantsService>(typeof(ParticipantsService));
+            ServiceLocator.Register(typeof(ILogger), typeof(Logger));
+            ServiceLocator.Register(typeof(IParticipantsRepository), typeof(ParticipantsRepository));
+            ServiceLocator.Register(typeof(IParticipantsService), typeof(ParticipantsService));
         }
 
         public void Dispose()
