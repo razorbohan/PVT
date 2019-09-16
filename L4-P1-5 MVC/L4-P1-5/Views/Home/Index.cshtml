@@ -1,15 +1,22 @@
-﻿@model L4_P1_5.ViewModel.PartyViewModel
+﻿@model IEnumerable<L4_P1_5.ViewModel.PartyViewModel>
+
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Index";
 }
 
-<div class="greetings">
-    <h1>Hollowa!</h1>
-    <p>Го на пати</p>
-</div>
+<h2>Приветствуем всех!</h2>
 
-<div class="controls">
-    @Html.ActionLink("Party list", "Index", "Participants")
-    <br>
-    @Html.ActionLink("Join party", "Index", "Vote")
-</div>
+<h4>Представляем Вашему вниманию список надвигающихся вечеринок:</h4>
+
+<ul>
+    @foreach (var party in Model)
+    {
+        <li>
+            @Html.ActionLink(party.Title, "Index", "Party", new { id = party.Id }, null)
+        </li>
+    }
+</ul>
+
+<h5>Выбирай понравившуюся и присоединяйся!</h5>
+
+

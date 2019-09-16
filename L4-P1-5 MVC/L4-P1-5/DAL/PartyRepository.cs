@@ -20,8 +20,9 @@ namespace L4_P1_5.DAL
         {
             Parties = new List<Party>
             {
-                new Party {Id = 0, Title = "Uber Party", Location = "Wall str 17", Date = DateTime.Now},
-                new Party {Id = 1, Title = "After Party", Location = "Wall str 19", Date = DateTime.Now.AddDays(1)}
+                new Party {Id = 1, Title = "Super Party", Location = "Wall str 17", Date = DateTime.Now},
+                new Party {Id = 2, Title = "Uber Party", Location = "Wall str 18", Date = DateTime.Now.AddDays(1)},
+                new Party {Id = 3, Title = "After Party", Location = "Wall str 19", Date = DateTime.Now.AddDays(2)}
             };
         }
 

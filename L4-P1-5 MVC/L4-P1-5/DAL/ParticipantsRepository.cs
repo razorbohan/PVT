@@ -10,7 +10,7 @@ namespace L4_P1_5.DAL
     public interface IParticipantsRepository
     {
         List<Participant> List();
-        void Save(string name, bool isAttend, string reason);
+        void Save(int partyId, string name, bool isAttend, string reason);
         void Delete(string name);
     }
     
@@ -20,7 +20,7 @@ namespace L4_P1_5.DAL
 
         public ParticipantsRepository()
         {
-            var json = File.ReadAllText(HttpContext.Current.Server.MapPath("~/App_Data/data.json"));
+            var json = File.ReadAllText(HttpContext.Current.Server.MapPath("~/App_Data/participants.json"));
             Participants = JsonConvert.DeserializeObject<List<Participant>>(json);
         }
 
@@ -34,7 +34,7 @@ namespace L4_P1_5.DAL
             return Participants.FirstOrDefault(x => x.Name == name);
         }
 
-        public void Save(string name, bool isAttend, string reason)
+        public void Save(int partyId, string name, bool isAttend, string reason)
         {
             var participant = Get(name);
             if (participant != null)
@@ -42,7 +42,7 @@ namespace L4_P1_5.DAL
                 Delete(name);
             }
 
-            var newParticipant = new Participant(name, isAttend, reason);
+            var newParticipant = new Participant(partyId, name, isAttend, reason);
             Participants.Add(newParticipant);
 
             Commit();

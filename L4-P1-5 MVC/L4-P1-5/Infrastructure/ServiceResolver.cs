@@ -35,8 +35,12 @@ namespace L4_P1_5.Infrastructure
         private void RegisterServices()
         {
             ServiceLocator.Register(typeof(ILogger), typeof(Logger));
+
             ServiceLocator.Register(typeof(IParticipantsRepository), typeof(ParticipantsRepository));
-            ServiceLocator.Register(typeof(IPartyService), typeof(ParticipantsService));
+            ServiceLocator.Register(typeof(IPartyRepository), typeof(PartyRepository));
+
+            ServiceLocator.Register(typeof(IPartyService), typeof(PartyService));
+
             ServiceLocator.Register(typeof(HomeController), typeof(HomeController));
             ServiceLocator.Register(typeof(PartyController), typeof(PartyController));
         }
