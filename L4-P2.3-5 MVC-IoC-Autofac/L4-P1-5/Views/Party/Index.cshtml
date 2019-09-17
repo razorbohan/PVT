@@ -1,0 +1,46 @@
+﻿@model L4_P1_5.ViewModel.PartyDetailsViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Детали тусовки "<b>@Model.Title</b>":</h2>
+
+<h3>Когда: <b>@Model.Date.Date</b></h3>
+<h3>Где: <b>@Model.Location</b></h3>
+<br>
+
+<h2>С Вами также будут:</h2>
+@if (Model.Attendants.Any())
+{
+    <ul>
+        @foreach (var attendant in Model.Attendants)
+        {
+            <li>
+                @attendant
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Пока никого :(</p>
+}
+<br>
+
+<h3>Присоединяйся!</h3>
+@using (Html.BeginForm("Vote", "Party", FormMethod.Post))
+{
+    <input type="hidden" name="partyId" value="@Model.PartyId" /><br />
+    <label>Имя:</label>
+    <input type="text" name="name" /><br />
+
+    <label>Иду:</label>
+    <input type="checkbox" name="isAttend" /><br />
+
+    <input type="submit" value="Отправить" />
+}
+<br>
+
+@Html.ActionLink("<-- К списку тус", "Index", "Home")
+
