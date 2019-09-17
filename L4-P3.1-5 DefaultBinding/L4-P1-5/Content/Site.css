@@ -1,0 +1,26 @@
+﻿body {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-size: 2em;
+    background-color: antiquewhite;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    margin: auto;
+}
+
+.content .socket-area {
+    background-color: azure;
+    width: 700px;
+    height: 300px;
+}
+
+.content button {
+    padding: 10px;
+    border-radius: 20px;
+    /*background: deepskyblue;*/
+}
