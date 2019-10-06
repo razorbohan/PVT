@@ -1,0 +1,22 @@
+﻿@model IEnumerable<L4_P1_5.Models.Party>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Приветствуем всех!</h2>
+
+<h4>Представляем Вашему вниманию список надвигающихся вечеринок:</h4>
+
+<ul>
+    @foreach (var party in Model)
+    {
+        <li>
+            @Html.ActionLink(party.Title, "Index", "Party", new { id = party.Id }, null)
+        </li>
+    }
+</ul>
+
+<h5>Выбирай понравившуюся и присоединяйся!</h5>
+
+
