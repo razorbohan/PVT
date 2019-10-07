@@ -8,6 +8,7 @@ namespace L4_P1_5.Logic
     public interface IPartyService
     {
         List<Party> GetIncomingParties();
+        List<Party> GetFirst10Parties();
         Party GetParty(int partyId);
         void Vote(int partyId, string name, bool isAttend, string photo);
         List<Participant> ListAttendants(int partyId);
@@ -27,6 +28,11 @@ namespace L4_P1_5.Logic
         public List<Party> GetIncomingParties()
         {
             return PartyRepository.List();
+        }
+
+        public List<Party> GetFirst10Parties()
+        {
+            return PartyRepository.List().OrderByDescending(x => x.Date).Take(10).ToList();
         }
 
         public Party GetParty(int partyId)

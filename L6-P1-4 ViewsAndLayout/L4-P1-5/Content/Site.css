@@ -47,9 +47,9 @@
     }
 
 .incoming-parties {
-    background: red;
+    background: wheat;
     position: absolute;
     right: 20px;
     bottom: 20px;
+    padding: 10px;
 }
-

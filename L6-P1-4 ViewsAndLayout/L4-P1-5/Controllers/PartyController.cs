@@ -46,6 +46,14 @@ namespace L4_P1_5.Controllers
             return RedirectToAction("Index", new { id = model.PartyId });
         }
 
+        [ChildActionOnly]
+        public ActionResult GetFirst10Parties()
+        {
+            var parties = PartyService.GetFirst10Parties();
+
+            return PartialView("_GetFirst10Parties", parties);
+        }
+
         //public ActionResult Participants()
         //{
         //    return View();
