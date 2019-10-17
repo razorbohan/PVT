@@ -21,11 +21,11 @@
             <li>
                 @if (string.IsNullOrEmpty(attendant.Photo))
                 {
-                    <img src="~/Content/images/noimagefound.jpg" alt="photo" width="50" height="50">
+                    <img src="~/images/noimagefound.jpg" alt="photo" width="50" height="50">
                 }
                 else
                 {
-                    <img src="~/Content/images/@attendant.Photo" alt="photo" width="50" height="50">
+                    <img src="~/images/@attendant.Photo" alt="photo" width="50" height="50">
                 }
                 <p style="margin: 0">@attendant.Name</p>
             </li>
@@ -39,8 +39,7 @@ else
 <br>
 
 <h3>Присоединяйся!</h3>
-@using (Html.BeginForm("Vote", "Party", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
+<form asp-controller="Party" asp-action="Vote" enctype="multipart/form-data">
     <input type="hidden" name="partyId" value="@Model.PartyId" /><br />
     <label>Имя:</label>
     <input type="text" name="name" /><br />
@@ -55,8 +54,7 @@ else
     <br />
 
     <input type="submit" value="Отправить" />
-}
+</form>
 <br>
 
-@Html.ActionLink("<-- К списку тус", "Index", "Home")
-
+<a asp-action="Index" asp-controller="Home">К списку тус</a>

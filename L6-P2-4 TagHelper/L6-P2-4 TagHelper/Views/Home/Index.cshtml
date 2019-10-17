@@ -12,7 +12,7 @@
     @foreach (var party in Model)
     {
         <li>
-            @Html.ActionLink(party.Title, "Index", "Party", new { id = party.Id }, null)
+            <a asp-action="Index" asp-controller="Party" asp-route-id="@party.Id">@party.Title</a>
         </li>
     }
 </ul>

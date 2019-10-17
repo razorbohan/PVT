@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace L6_P2_4_TagHelper.Infrastructure
 {
@@ -13,10 +14,12 @@ namespace L6_P2_4_TagHelper.Infrastructure
     public class Logger : ILogger
     {
         private string LogPath { get; }
+        private readonly IHostingEnvironment _env;
 
-        public Logger()
+        public Logger(IHostingEnvironment env)
         {
-            LogPath = "~/log.txt";
+            _env = env;
+            LogPath = $"{_env.ContentRootPath}/log.txt";
         }
 
         public Logger(string logPath)

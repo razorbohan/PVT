@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using L6_P2_4_TagHelper.DAL;
+using L6_P2_4_TagHelper.Infrastructure;
+using L6_P2_4_TagHelper.Logic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +26,11 @@ namespace L6_P2_4_TagHelper
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IParticipantsRepository, ParticipantsRepository>();
+            services.AddTransient<IPartyRepository, PartyRepository>();
+            services.AddTransient<IPartyService, PartyService>();
+            services.AddTransient<ILogger, Logger>();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.

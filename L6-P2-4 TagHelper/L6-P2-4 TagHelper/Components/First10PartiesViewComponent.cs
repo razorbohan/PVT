@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using L6_P2_4_TagHelper.Logic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Memorizer.Web.Components
 {
     public class First10PartiesViewComponent: ViewComponent
     {
-        public First10PartiesViewComponent()
+        private IPartyService PartyService { get; }
+
+        public First10PartiesViewComponent(IPartyService partyService)
         {
-            
+            PartyService = partyService;
         }
 
-        public string Invoke()
+        public IViewComponentResult Invoke()
         {
-            //var item = phones.OrderByDescending(x => x.Price).Take(1).FirstOrDefault();
+            var parties = PartyService.GetFirst10Parties();
 
-            return $"Самый дорогой телефо";
+            return View(parties);
         }
     }
 }

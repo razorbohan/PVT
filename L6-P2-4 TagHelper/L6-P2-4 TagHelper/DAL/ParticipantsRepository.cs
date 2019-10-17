@@ -20,7 +20,7 @@ namespace L6_P2_4_TagHelper.DAL
 
         public ParticipantsRepository()
         {
-            var json = File.ReadAllText("participants.json");
+            var json = File.ReadAllText("Data/participants.json");
             Participants = JsonConvert.DeserializeObject<List<Participant>>(json);
         }
 
@@ -59,7 +59,7 @@ namespace L6_P2_4_TagHelper.DAL
         private void Commit()
         {
             var json = JsonConvert.SerializeObject(Participants);
-            File.WriteAllText("participants.json", json);
+            File.WriteAllText("Data/participants.json", json);
         }
     }
 }

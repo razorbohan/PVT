@@ -20,7 +20,7 @@
     <div class="container">
         @RenderBody()
         @*@Html.Action("GetFirst10Parties", "Party")*@
-        @await Component.InvokeAsync("GetFirst10Parties")
+        @await Component.InvokeAsync("First10Parties")
     </div>
 
     <environment include="Development">
