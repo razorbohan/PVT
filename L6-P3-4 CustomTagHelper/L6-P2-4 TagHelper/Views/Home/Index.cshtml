@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Party>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Приветствуем всех!</h2>
+
+<h4>Представляем Вашему вниманию список надвигающихся вечеринок:</h4>
+
+<ul>
+    @foreach (var party in Model)
+    {
+        <li>
+            @*<a asp-action="Index" asp-controller="Party" asp-route-id="@party.Id">@party.Title</a>*@
+            <party id="@party.Id">@party.Title</party>
+        </li>
+    }
+</ul>
+
+<h5>Выбирай понравившуюся и присоединяйся!</h5>
+
