@@ -1,0 +1,21 @@
+﻿@model IEnumerable<L4_P1_5.Models.Party>
+
+<div class="incoming-parties">
+    <h3>Ближайшие вечеринки:</h3>
+    <ul>
+        @*<li>Party 1</li>
+            <li>Party 2</li>
+            <li>Party 3</li>
+            <li>Party 4</li>
+            <li>Party 5</li>
+            <li>Party 6</li>
+            <li>Party 7</li>
+            <li>Party 8</li>
+            <li>Party 9</li>
+            <li>Party 10</li>*@
+        @foreach (var party in Model)
+        {
+            <li>@party.Title</li>
+        }
+    </ul>
+</div>

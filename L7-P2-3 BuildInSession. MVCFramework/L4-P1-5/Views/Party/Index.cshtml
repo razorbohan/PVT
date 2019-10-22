@@ -1,0 +1,62 @@
+﻿@model L4_P1_5.ViewModel.PartyDetailsViewModel
+
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+}
+
+<h2>Детали тусовки "<b>@Model.Title</b>":</h2>
+
+<h3>Когда: <b>@Model.Date.ToString("dd.MM.yy H:mm")</b></h3>
+<h3>Где: <b>@Model.Location</b></h3>
+<br>
+
+<h2>С Вами также будут:</h2>
+@if (Model.Attendants.Any())
+{
+    <ul class="party-list">
+        @foreach (var attendant in Model.Attendants)
+        {
+            <li>
+                @if (string.IsNullOrEmpty(attendant.Photo))
+                {
+                    <img src="~/Content/images/noimagefound.jpg" alt="photo" width="50" height="50">
+                }
+                else
+                {
+                    <img src="~/Content/images/@attendant.Photo" alt="photo" width="50" height="50">
+                }
+                <p style="margin: 0">@attendant.Name</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Пока никого :(</p>
+}
+<br>
+
+<h3>Присоединяйся!</h3>
+@using (Html.BeginForm("Vote", "Party", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="hidden" name="partyId" value="@Model.PartyId" /><br />
+    <label>Имя:</label>
+    <input type="text" name="name" /><br />
+
+    <label>Иду:</label>
+    <input type="checkbox" name="isAttend" /><br />
+
+    <div class="file-fields">
+        <label for="file">Аватарочка:</label>
+        <input type="file" name="photo" accept="image/*" />
+    </div>
+    <br />
+
+    <input type="submit" value="Отправить" />
+}
+<br>
+
+@Html.ActionLink("<-- К списку тус", "Index", "Home")
+
