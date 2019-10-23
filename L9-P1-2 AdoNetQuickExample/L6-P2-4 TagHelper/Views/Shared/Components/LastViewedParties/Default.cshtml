@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Party>
+
+<div class="last-viewed-parties">
+    <h3>Вы недавно смотрели:</h3>
+    @if (Model.Any())
+    {
+        <ul>
+            @foreach (var party in Model)
+            {
+                <li>@party.Title</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Ничего :(</p>
+    }
+</div>
