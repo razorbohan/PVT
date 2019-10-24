@@ -29,8 +29,8 @@ namespace L6_P2_4_TagHelper.Controllers
         public ActionResult Index(int id)
         {
             var party = PartyService.GetParty(id);
-            var attendants = PartyService.ListAttendants(party.Id).Select(x => (x.Name, x.Photo)).ToList();
-            var model = new PartyDetailsViewModel { PartyId = party.Id, Date = party.Date, Title = party.Title, Location = party.Location, Attendants = attendants };
+            var attendants = PartyService.ListAttendants(party.Id).Select(x => (x.Name, x.Avatar)).ToList();
+            var model = new PartyDetailsViewModel { PartyId = party.Id, Date = party.Date, Title = party.Name, Location = party.Location, Attendants = attendants };
 
             MemoriseParty(party);
 
@@ -52,7 +52,7 @@ namespace L6_P2_4_TagHelper.Controllers
 
                 PartyService.Vote(model.PartyId, model.Name, model.IsAttend == "on", filename);
 
-                Logger.Info($"{model.Name} -> {PartyService.GetParty(model.PartyId).Title} : {model.IsAttend == "on"}");
+                Logger.Info($"{model.Name} -> {PartyService.GetParty(model.PartyId).Name} : {model.IsAttend == "on"}");
             }
 
             return RedirectToAction("Index", new { id = model.PartyId });

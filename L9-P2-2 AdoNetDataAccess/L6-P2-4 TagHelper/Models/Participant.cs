@@ -2,17 +2,11 @@
 {
     public class Participant
     {
-        public int PartyId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool IsAttend { get; set; }
-        public string Photo { get; set; }
-
-        public Participant(int partyId, string name, bool isAttend, string photo)
-        {
-            PartyId = partyId;
-            Name = name;
-            IsAttend = isAttend;
-            Photo = photo;
-        }
+        public string Avatar { get; set; }
+        public string Reason { get; set; }
+        public int PartyId { get; set; }
     }
 }

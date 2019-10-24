@@ -10,34 +10,25 @@ namespace L6_P2_4_TagHelper.DAL
 {
     public interface IPartyRepository
     {
-        Party GetById(int id);
-        List<Party> GetAllParties();
+        Party Get(int id);
+        List<Party> GetAll();
+        void Create(Party party);
+        void Delete(int id);
+        void Edit(Party party);
     }
 
-    public class PartyRepository : IPartyRepository
+    public class PartyRepository : Repository, IPartyRepository
     {
-        private SqlConnection DbConnection { get; }
-        //private List<Party> Parties { get; set; }
-        private ILogger Logger { get; }
-
-        //public PartyRepository()
-        //{
-        //    var json = File.ReadAllText("Data/parties.json");
-        //    Parties = JsonConvert.DeserializeObject<List<Party>>(json);
-        //}
-
         public PartyRepository(IConfiguration configuration, ILogger logger)
+            : base(configuration, logger)
         {
-            DbConnection = new SqlConnection(configuration.GetConnectionString("PartyDB"));
-            Logger = logger;
-
-            OpenConnection();
+            //Create(new Party { Title = "God Party", Location = "San Morino", Date = DateTime.Now.AddDays(1) });
+            //Edit(new Party { Id = 19, Title = "Hot Party1", Location = "Wall str 351", Date = DateTime.Now.AddDays(1) });
+            //Delete(22);
         }
 
-
-        public Party GetById(int id)
+        public Party Get(int id)
         {
-
             var sqlQuery = $"SELECT * FROM Parties WHERE Id='{id}'";
             var reader = ExecuteReader(sqlQuery);
             if (reader.HasRows)
@@ -68,7 +59,7 @@ namespace L6_P2_4_TagHelper.DAL
             return null;
         }
 
-        public List<Party> GetAllParties()
+        public List<Party> GetAll()
         {
             var parties = new List<Party>();
 
@@ -122,28 +113,19 @@ namespace L6_P2_4_TagHelper.DAL
             return futureParties;
         }
 
-        private void OpenConnection()
+        public void Create(Party party)
         {
-            if (DbConnection.State != ConnectionState.Open)
-                DbConnection.Open();
+            ExecuteNonQuery($"INSERT INTO Parties (Name, Location, Date) VALUES ('{party.Name}', '{party.Location}', '{party.Date:yyyy-MM-dd HH:mm:ss.fff}');");
         }
-        
-        private SqlDataReader ExecuteReader(string sqlQuery)
+
+        public void Delete(int id)
         {
-            try
-            {
-                using (var transaction = DbConnection.BeginTransaction())
-                using (var command = new SqlCommand { Transaction = transaction, CommandText = sqlQuery, Connection = DbConnection })
-                {
-                    var reader = command.ExecuteReader();
-                    return reader;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message);
-                return null;
-            }
+            ExecuteNonQuery($"DELETE FROM Parties WHERE id = {id}");
+        }
+
+        public void Edit(Party party)
+        {
+            ExecuteNonQuery($"UPDATE Parties SET Name='{party.Name}', Location='{party.Location}', Date='{party.Date:yyyy-MM-dd HH:mm:ss.fff}' WHERE id = {party.Id};");
         }
 
         private Party ReaderToObject(SqlDataReader reader)
@@ -156,7 +138,7 @@ namespace L6_P2_4_TagHelper.DAL
             return new Party
             {
                 Id = (int)partyId,
-                Title = partyName?.ToString(),
+                Name = partyName?.ToString(),
                 Location = partyLocation?.ToString(),
                 Date = DateTime.Parse(partyDate?.ToString())
             };

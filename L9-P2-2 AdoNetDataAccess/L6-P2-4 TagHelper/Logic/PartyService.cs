@@ -27,27 +27,27 @@ namespace L6_P2_4_TagHelper.Logic
 
         public List<Party> GetIncomingParties()
         {
-            return PartyRepository.GetAllParties();
+            return PartyRepository.GetAll();
         }
 
         public List<Party> GetFirst10Parties()
         {
-            return PartyRepository.GetAllParties().OrderByDescending(x => x.Date).Take(10).ToList();
+            return PartyRepository.GetAll().OrderByDescending(x => x.Date).Take(10).ToList();
         }
 
         public Party GetParty(int partyId)
         {
-            return PartyRepository.GetById(partyId);
+            return PartyRepository.Get(partyId);
         }
 
         public List<Participant> ListAttendants(int partyId)
         {
-            return ParticipantsRepository.List().Where(x => x.PartyId == partyId && x.IsAttend).ToList();
+            return ParticipantsRepository.GetAll().Where(x => x.PartyId == partyId && x.IsAttend).ToList();
         }
 
         public void Vote(int partyId, string name, bool isAttend, string photo)
         {
-            ParticipantsRepository.Save(partyId, name, isAttend, photo);
+            ParticipantsRepository.Create(new Participant { Name = name, IsAttend = isAttend, Avatar = photo, PartyId = partyId });
         }
     }
 }
