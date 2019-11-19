@@ -1,0 +1,64 @@
+﻿@model L6_P2_4_TagHelper.ViewModel.VoteViewModel
+@*@if (ViewContext.ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+    {
+        <div class="error-box">
+            <h3 class="error">Error box:</h3>
+
+            @foreach (var item in ViewContext.ViewData.ModelState)
+            {
+                if (item.Value.Errors.Any())
+                {
+                    <span><b>@item.Key: </b></span>
+                    <span>@(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))</span>
+                    <br />
+                }
+            }
+        </div>
+    }*@
+@if (ViewContext.ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+{
+    <div class="error-box" asp-validation-summary="All"></div>
+}
+
+<form asp-controller="Party" asp-action="Vote" enctype="multipart/form-data">
+    <input type="hidden" name="partyId" value="@Model.PartyId" /><br />
+
+    @*<label>Имя:</label>
+        <input type="text" name="name" /><br />
+        @if (ViewContext.ViewData.ModelState.ContainsKey("name") && ViewContext.ViewData.ModelState["name"].Errors.Any())
+        {
+            <span class="error">@ViewContext.ViewData.ModelState["name"].Errors[0].ErrorMessage</span><br />
+        }*@
+    <div>
+        Имя:
+        <input type="text" asp-for="Name" />
+        <span asp-validation-for="Name" class="error"></span>
+    </div>
+
+    @*<label>Email:</label>
+        <input type="text" name="email" /><br />
+        @if (ViewContext.ViewData.ModelState.ContainsKey("email") && ViewContext.ViewData.ModelState["email"].Errors.Any())
+        {
+            <span class="error">@ViewContext.ViewData.ModelState["email"].Errors[0].ErrorMessage</span><br />
+        }*@
+    <div>
+        Email:
+        <input type="text" asp-for="Email" />
+        <span asp-validation-for="Email" class="error"></span>
+    </div>
+
+    @*<label>Иду:</label>
+        <input type="checkbox" name="isAttend" /><br />*@
+    <div>
+        Иду:
+        <input type="checkbox" asp-for="IsAttend" />
+    </div>
+
+    <div class="file-fields">
+        <label for="file">Аватарочка:</label>
+        <input type="file" name="photo" accept="image/*" />
+    </div>
+    <br />
+
+    <input type="submit" value="Отправить" />
+</form>
