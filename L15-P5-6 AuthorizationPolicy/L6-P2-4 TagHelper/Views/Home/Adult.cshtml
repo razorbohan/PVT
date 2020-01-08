@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Party>
+
+@{
+    ViewData["Title"] = "Фвгде Page";
+}
+
+<h2>Приветствуем (не) всех!</h2>
+
+<h4>Представляем Вашему вниманию список вечеринок 18+:</h4>
+
+<ul>
+    @foreach (var party in Model)
+    {
+        <li>
+            <party id="@party.Id">@party.Name</party>
+        </li>
+    }
+</ul>
+
+<h5>Выбирай понравившуюся и присоединяйся! (если ты уже большой(-ая))</h5>
+
+@await Component.InvokeAsync("LastViewedParties")
