@@ -1,0 +1,11 @@
+﻿@model IEnumerable<L6_P2_4_TagHelper.DAL.Models.Party>
+
+<div class="incoming-parties">
+    <h3>Ближайшие вечеринки:</h3>
+    <ul>
+        @foreach (var party in Model)
+        {
+            <li>@party.Name</li>
+        }
+    </ul>
+</div>

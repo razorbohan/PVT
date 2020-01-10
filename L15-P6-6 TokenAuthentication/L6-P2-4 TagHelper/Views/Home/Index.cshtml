@@ -1,0 +1,24 @@
+﻿@model IEnumerable<L6_P2_4_TagHelper.DAL.Models.Party>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Приветствуем всех!</h2>
+
+<h4>Представляем Вашему вниманию список надвигающихся вечеринок:</h4>
+
+<ul>
+    @foreach (var party in Model)
+    {
+        <li>
+            <party id="@party.Id">@party.Name</party>
+        </li>
+    }
+</ul>
+
+<h5>Выбирай понравившуюся и присоединяйся!</h5>
+
+<a asp-action="Adult" asp-controller="Home">18+</a>
+
+@await Component.InvokeAsync("LastViewedParties")
