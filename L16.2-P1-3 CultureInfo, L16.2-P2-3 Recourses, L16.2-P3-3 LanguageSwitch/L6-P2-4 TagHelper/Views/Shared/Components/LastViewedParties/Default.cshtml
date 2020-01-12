@@ -1,0 +1,19 @@
+﻿@model IEnumerable<L6_P2_4_TagHelper.DAL.Models.Party>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+<div class="last-viewed-parties">
+    <h3>@Localizer["Header"]:</h3>
+    @if (Model.Any())
+    {
+        <ul>
+            @foreach (var party in Model)
+            {
+                <li>@party.Name</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Ничего :(</p>
+    }
+</div>

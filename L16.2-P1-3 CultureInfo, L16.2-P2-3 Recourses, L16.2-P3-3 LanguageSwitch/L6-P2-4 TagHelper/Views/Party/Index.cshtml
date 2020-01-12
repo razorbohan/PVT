@@ -1,0 +1,49 @@
+﻿@model L6_P2_4_TagHelper.ViewModel.PartyDetailsViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>@Localizer["Header1"] "<b>@Model.Title</b>":</h2>
+
+<h3>@Localizer["Header2"]: <b>@Model.Date.ToString("dd.MM.yy H:mm")</b></h3>
+<h3>@Localizer["Header3"]: <b>@Model.Location</b></h3>
+<br>
+
+<h2>@Localizer["Header4"]:</h2>
+@if (Model.Attendants.Any())
+{
+    <ul class="party-list">
+        @foreach (var attendant in Model.Attendants)
+        {
+            <li>
+                @if (string.IsNullOrEmpty(attendant.Photo))
+                {
+                    <img src="~/images/noimagefound.jpg" alt="photo" width="50" height="50">
+                }
+                else
+                {
+                    <img src="~/images/@attendant.Photo" alt="photo" width="50" height="50">
+                }
+                <p style="margin: 0">@attendant.Name</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>@Localizer["Nobody"] :(</p>
+}
+<br>
+
+<h3>@Localizer["Footer"]!</h3>
+
+@await Component.InvokeAsync("VoteParty", Model.PartyId)
+
+<br>
+
+<a asp-action="Index" asp-controller="Home">@Localizer["Back"]</a>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,23 @@
+﻿@model IEnumerable<L6_P2_4_TagHelper.DAL.Models.Party>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = "Фвгде Page";
+}
+
+<h2>@Localizer["Header1"]</h2>
+
+<h4>@Localizer["Header2"]:</h4>
+
+<ul>
+    @foreach (var party in Model)
+    {
+        <li>
+            <party id="@party.Id">@party.Name</party>
+        </li>
+    }
+</ul>
+
+<h5>@Localizer["Footer"]</h5>
+
+@await Component.InvokeAsync("LastViewedParties")

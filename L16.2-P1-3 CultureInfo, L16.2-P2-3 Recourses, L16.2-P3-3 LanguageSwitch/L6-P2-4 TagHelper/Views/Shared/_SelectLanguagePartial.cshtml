@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
+        .ToList();
+}
+
+<div class="btn-group">
+    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+        Language
+    </button>
+    <div class="dropdown-menu">
+        @foreach (var culture in cultureItems)
+        {
+            <a asp-controller="Home"
+               asp-action="SetLanguage"
+               asp-route-returnUrl="@Context.Request.Path"
+               asp-route-culture="@culture.Value"
+               class="dropdown-item">@culture.Text</a>
+        }
+    </div>
+</div>
