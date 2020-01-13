@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,11 +8,13 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
-using ITNews.Data;
-using ITNews.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Hosting;
+using Swashbuckle.AspNetCore.Swagger;
+using ITNews.Data;
+using ITNews.Models;
 using ITNews.Logic;
 
 namespace ITNews
@@ -31,7 +35,16 @@ namespace ITNews
             services.AddDbContext<NewsContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
+                options.Password.RequiredLength = 5;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.SignIn.RequireConfirmedEmail = true;
+            })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
@@ -39,7 +52,7 @@ namespace ITNews
             services.AddTransient<INewsRepository, NewsRepository>();
             services.AddTransient<INewsService, NewsService>();
 
-            services.AddAuthentication() 
+            services.AddAuthentication()
                 .AddIdentityServerJwt();
 
             services.AddControllersWithViews();
@@ -49,9 +62,14 @@ namespace ITNews
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ITNewsAPI", Version = "v1" });
+            });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -81,6 +99,12 @@ namespace ITNews
                 endpoints.MapRazorPages();
             });
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ITNewsAPI_v1");
+            });
+
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
@@ -90,6 +114,37 @@ namespace ITNews
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            CreateRoles(serviceProvider).Wait();
+        }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            var roleExist = await roleManager.RoleExistsAsync("Administrator");
+            if (!roleExist)
+            {
+                await roleManager.CreateAsync(new IdentityRole("Administrator"));
+            }
+
+            var admin = new ApplicationUser
+            {
+                UserName = "admin@itnews.ga",
+                Email = "admin@itnews.ga",
+                EmailConfirmed = true
+            };
+
+            var user = await userManager.FindByNameAsync("admin@itnews.ga");
+            if (user == null)
+            {
+                var createAdmin = await userManager.CreateAsync(admin, "admin");
+                if (createAdmin.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, "Administrator");
+                }
+            }
         }
     }
 }

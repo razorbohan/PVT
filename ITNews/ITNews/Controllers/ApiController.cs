@@ -16,14 +16,10 @@ namespace ITNews.Controllers
     public class ApiController : ControllerBase
     {
         public INewsService NewsService { get; set; }
-        private SignInManager<ApplicationUser> SignInManager { get; }
-        private UserManager<ApplicationUser> UserManager { get; }
-
-        public ApiController(INewsService newsService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        
+        public ApiController(INewsService newsService)
         {
             NewsService = newsService;
-            SignInManager = signInManager;
-            UserManager = userManager;
         }
 
         // GET: api/GetNews
