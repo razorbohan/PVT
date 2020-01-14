@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Hosting;
-using Swashbuckle.AspNetCore.Swagger;
 using ITNews.Data;
 using ITNews.Models;
 using ITNews.Logic;
@@ -55,7 +54,9 @@ namespace ITNews
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             services.AddRazorPages();
 
             services.AddSpaStaticFiles(configuration =>

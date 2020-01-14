@@ -19,10 +19,10 @@ namespace ITNews.Data
         {
             var news = modelBuilder.Entity<News>();
             news.ToTable("News");
-            news.Property(c => c.Name).IsRequired().IsUnicode().HasMaxLength(200);
+            news.Property(c => c.Name).IsRequired().IsUnicode().HasMaxLength(100);
             news.Property(c => c.Created).IsRequired().HasDefaultValueSql("getdate()");
-            news.Property(c => c.ShortDescription).IsRequired().HasMaxLength(300);
-            news.Property(c => c.Description).IsRequired().HasMaxLength(2000);
+            news.Property(c => c.ShortDescription).IsRequired().HasMaxLength(500);
+            news.Property(c => c.Description).IsRequired().HasMaxLength(5000);
             news.HasOne(s => s.Category).WithMany(s => s.News).IsRequired();
 
             var category = modelBuilder.Entity<Category>();
@@ -51,7 +51,8 @@ namespace ITNews.Data
             newsTags.HasKey(p => new { p.NewsId, p.TagId });
             newsTags
                  .HasOne(p => p.News)
-                 .WithMany(p => p.NewsTags);
+                 .WithMany(p => p.NewsTags)
+                 .HasForeignKey(p => p.NewsId);
             newsTags
                  .HasOne(p => p.Tag)
                  .WithMany(p => p.NewsTags)

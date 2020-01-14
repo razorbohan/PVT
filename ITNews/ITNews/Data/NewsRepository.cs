@@ -1,4 +1,5 @@
 ﻿using ITNews.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace ITNews.Data
         void Create(News news);
         void Delete(int id);
         void Edit(News news);
+
+        List<Category> GetAllCategories();
+        List<Tag> GetAllTags();
     }
 
     public class NewsRepository : INewsRepository
@@ -35,7 +39,21 @@ namespace ITNews.Data
 
         public List<News> GetAll()
         {
-            return Context.News.ToList();
+            return Context.News
+                .Include(x => x.Category)
+                .Include(x => x.NewsTags)
+                    .ThenInclude(x => x.Tag)
+                .ToList();
+        }
+
+        public List<Category> GetAllCategories()
+        {
+            return Context.Categories.ToList();
+        }
+
+        public List<Tag> GetAllTags()
+        {
+            return Context.Tags.ToList();
         }
 
         public void Create(News news)
