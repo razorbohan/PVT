@@ -16,7 +16,7 @@ namespace ITNews.Controllers
     public class ApiController : ControllerBase
     {
         public INewsService NewsService { get; set; }
-        
+
         public ApiController(INewsService newsService)
         {
             NewsService = newsService;
@@ -28,6 +28,22 @@ namespace ITNews.Controllers
         public IEnumerable<News> GetNews()
         {
             return NewsService.GetAllNews();
+        }
+
+        // GET: api/GetNewsByCategory/java
+        [AllowAnonymous]
+        [HttpGet("GetNewsByCategory/{category}")]
+        public IEnumerable<News> GetNewsByCategory(string category)
+        {
+            return NewsService.GetNewsByCategory(category);
+        }
+
+        // GET: api/GetNewsByTag/programming
+        [AllowAnonymous]
+        [HttpGet("GetNewsByTag/{tag}")]
+        public IEnumerable<News> GetNewsByTag(string tag)
+        {
+            return NewsService.GetNewsByTag(tag);
         }
 
         // GET: api/GetNews/5

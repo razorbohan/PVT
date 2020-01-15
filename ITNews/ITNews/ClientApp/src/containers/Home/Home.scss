@@ -1,33 +1,3 @@
 .home {
-  .news {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
 
-    .name {
-      text-transform: uppercase;
-    }
-
-    .meta,
-    .tags {
-      display: inline-block;
-    }
-
-    .meta {
-      .category {
-        margin-right: 10px;
-      }
-
-      .tags > * {
-        margin-right: 10px;
-      }
-    }
-
-    .short {
-      text-align: justify;
-    }
-
-    .created {
-    }
-  }
 }

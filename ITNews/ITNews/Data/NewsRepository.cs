@@ -29,7 +29,7 @@ namespace ITNews.Data
 
         public News Get(int id)
         {
-            return Context.News.FirstOrDefault(news => news.Id == id);
+            return GetAll().FirstOrDefault(news => news.Id == id);
         }
 
         public News GetByName(string name)
@@ -41,7 +41,7 @@ namespace ITNews.Data
         {
             return Context.News
                 .Include(x => x.Category)
-                .Include(x => x.NewsTags)
+                .Include(x => x.Tags)
                     .ThenInclude(x => x.Tag)
                 .ToList();
         }
@@ -53,7 +53,11 @@ namespace ITNews.Data
 
         public List<Tag> GetAllTags()
         {
-            return Context.Tags.ToList();
+            return Context.Tags
+                 .Include(x => x.News)
+                    .ThenInclude(x => x.News)
+                        .ThenInclude(x => x.Category)
+                 .ToList();
         }
 
         public void Create(News news)

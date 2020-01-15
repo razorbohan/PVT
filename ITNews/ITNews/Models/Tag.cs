@@ -7,6 +7,6 @@ namespace ITNews.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<NewsTags> NewsTags { get; set; }
+        public List<NewsTags> News { get; set; }
     }
 }

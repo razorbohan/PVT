@@ -51,11 +51,11 @@ namespace ITNews.Data
             newsTags.HasKey(p => new { p.NewsId, p.TagId });
             newsTags
                  .HasOne(p => p.News)
-                 .WithMany(p => p.NewsTags)
+                 .WithMany(p => p.Tags)
                  .HasForeignKey(p => p.NewsId);
             newsTags
                  .HasOne(p => p.Tag)
-                 .WithMany(p => p.NewsTags)
+                 .WithMany(p => p.News)
                  .HasForeignKey(p => p.TagId);
         }
     }
