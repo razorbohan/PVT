@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router';
-import { Redirect } from 'react-router-dom'
+import { Redirect, Switch } from 'react-router-dom'
 import { Layout } from './containers/Layout';
 import { Home } from './containers/Home/Home';
 import { News } from './containers/News/News';
@@ -16,13 +16,16 @@ export default class App extends Component {
   render() {
     return (
       <Layout>
-        <Route exact path='/news/category/:category' component={Home} />
-        <Route exact path='/news/tag/:tag' component={Home} />
-        <Route exact path='/news/:id' component={News} />
-        {/* <Redirect exact from='/news' to='/' /> */}
-        <Route exact path='/' component={Home} />
-        {/* <AuthorizeRoute path='/fetch-data' component={FetchData} /> */}
-        <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
+        <Switch>
+          <Route exact path='/news/category/:category' component={Home} />
+          <Route exact path='/news/tag/:tag' component={Home} />
+          <Route exact path='/news/search/:search?' component={Home} />
+          <Route exact path='/news/:id' component={News} />
+          <Redirect exact from='/news' to='/' />
+          <Route exact path='/' component={Home} />
+          {/* <AuthorizeRoute path='/fetch-data' component={FetchData} /> */}
+          <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
+        </Switch>
       </Layout>
     );
   }

@@ -46,6 +46,14 @@ namespace ITNews.Controllers
             return NewsService.GetNewsByTag(tag);
         }
 
+        // GET: api/SearchNews/php
+        [AllowAnonymous]
+        [HttpGet("SearchNews/{search}")]
+        public IEnumerable<News> GetNews(string search)
+        {
+            return NewsService.SearchNews(search);
+        }
+
         // GET: api/GetNews/5
         [AllowAnonymous]
         [HttpGet("GetNews/{id}")]
@@ -79,6 +87,14 @@ namespace ITNews.Controllers
             NewsService.UpdateNews(news);
 
             return Ok();
+        }
+
+        // GET: api/GetTags
+        [AllowAnonymous]
+        [HttpGet("GetTags")]
+        public IEnumerable<Tag> GetTags()
+        {
+            return NewsService.GetTags();
         }
     }
 }

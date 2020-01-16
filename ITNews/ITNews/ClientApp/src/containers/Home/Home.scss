@@ -1,3 +1,70 @@
 .home {
+  display: flex;
 
+  button {
+    background: blue;
+    color: white;
+    border-radius: 6px;
+    border: 1px solid blue;
+    transition: 200ms;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .feed {
+    width: 80%;
+
+    .filter {
+      margin: 20px;
+
+      .filter-item {
+        display: flex;
+
+        p {
+          margin: 0;
+          margin-right: 10px;
+        }
+
+        button {
+          background: white;
+          color: blue;
+        }
+      }
+    }
+  }
+
+  .search-container {
+    display: flex;
+    flex-direction: column;
+
+    > * {
+      margin: 10px;
+    }
+
+    .calendar {
+      margin-top: 130px;
+    }
+
+    .search {
+      display: flex;
+      margin-top: 20px;
+
+      input {
+        margin-right: 5px;
+        padding-left: 10px;
+        height: 33px;
+        outline: none;
+        border-radius: 6px;
+        border: 1px solid blue;
+      }
+    }
+  }
 }
