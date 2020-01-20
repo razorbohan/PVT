@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './News.scss'
 import NewsComponent from '../../components/News/News'
 
-export class News extends Component {
+class News extends Component {
 
     constructor(props) {
         super(props);
@@ -31,3 +31,5 @@ export class News extends Component {
         );
     }
 }
+
+export default News

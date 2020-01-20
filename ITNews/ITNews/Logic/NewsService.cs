@@ -12,12 +12,14 @@ namespace ITNews.Logic
         IEnumerable<News> GetAllNews();
         IEnumerable<News> GetNewsByCategory(string category);
         IEnumerable<News> GetNewsByTag(string tag);
+        IEnumerable<News> GetNewsByDate(DateTime date);
         IEnumerable<News> SearchNews(string search);
         News GetNews(int newsId);
         void AddNews(News news);
         void UpdateNews(News news);
         void DeleteNews(int newsId);
         IEnumerable<Tag> GetTags();
+        IEnumerable<Category> GetCategories();
     }
     public class NewsService : INewsService
     {
@@ -30,15 +32,15 @@ namespace ITNews.Logic
 
         public IEnumerable<News> GetAllNews()
         {
-            //            var categories = NewsRepository.GetAllCategories();
-            //            var tags = NewsRepository.GetAllTags();
+            //var categories = NewsRepository.GetAllCategories();
+            //var tags = NewsRepository.GetAllTags();
 
-            //            var news = new News
-            //            {
-            //                Name = "JetBrains bringing iOS device support to Android Studio",
-            //                Created = DateTime.Now,
-            //                ShortDescription = "JetBrains plug-in for Android Studio will allow developers to run, test, and debug Kotlin on iOS devices and simulators ",
-            //                Description = @"Kotlin language inventor JetBrains is developing a plug-in for the Android Studio IDE that will support the development of Kotlin applications for Apple iOS devices. Due to preview in 2020, the Android Studio plug-in will allow developers to run, test, and debug Kotlin code on iOS devices and simulators.
+            //var news = new News
+            //{
+            //    Name = "JetBrains bringing iOS device support to Android Studio",
+            //    Created = DateTime.Now,
+            //    ShortDescription = "JetBrains plug-in for Android Studio will allow developers to run, test, and debug Kotlin on iOS devices and simulators ",
+            //    Description = @"Kotlin language inventor JetBrains is developing a plug-in for the Android Studio IDE that will support the development of Kotlin applications for Apple iOS devices. Due to preview in 2020, the Android Studio plug-in will allow developers to run, test, and debug Kotlin code on iOS devices and simulators.
 
             //Android Studio is Google’s free development tool for building Android mobile applications. The JetBrains plug-in will allow Kotlin developers to target the rival iOS platform as well. Many companies already run Kotlin on their production iOS apps as well as on Android apps. By leveraging Kotlin skills across Android and iOS, and sharing Kotlin business logic between the platforms, mobile application developers can reduce training, development, and maintenance costs.
             //[ Keep up with the latest developments in software development, cloud computing, data analytics, and machine learning with the InfoWorld Daily newsletter ]
@@ -49,9 +51,9 @@ namespace ITNews.Logic
             //Kotlin runs on iOS via Kotlin/Native technology, which combines an LLVM-based back-end and a native implementation of the Kotlin standard library. Kotlin/Native is designed to allow compilation where virtual machines are not desirable or possible, such as on iOS or embedded devices.
 
             //This story, ""JetBrains bringing iOS device support to Android Studio"" was originally published by InfoWorld."
-            //            };
-            //            news.Category = categories.First(x => x.Id == 3);
-            //            news.NewsTags = new List<NewsTags>
+            //};
+            //news.Category = categories.First(x => x.Id == 3);
+            //news.Tags = new List<NewsTags>
             //            {
             //              new NewsTags {
             //                News = news,
@@ -75,6 +77,11 @@ namespace ITNews.Logic
                 .First(x => x.Name == tag)
                 .News
                 .Select(x => x.News);
+        }
+
+        public IEnumerable<News> GetNewsByDate(DateTime date)
+        {
+            return NewsRepository.GetAll().Where(x => x.Created.Date == date.Date);
         }
 
         public IEnumerable<News> SearchNews(string search)
@@ -101,9 +108,15 @@ namespace ITNews.Logic
         {
             NewsRepository.Delete(newsId);
         }
+
         public IEnumerable<Tag> GetTags()
         {
             return NewsRepository.GetAllTags();
+        }
+
+        public IEnumerable<Category> GetCategories()
+        {
+            return NewsRepository.GetAllCategories();
         }
     }
 }

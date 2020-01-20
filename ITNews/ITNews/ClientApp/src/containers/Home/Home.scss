@@ -1,24 +1,6 @@
 .home {
   display: flex;
 
-  button {
-    background: blue;
-    color: white;
-    border-radius: 6px;
-    border: 1px solid blue;
-    transition: 200ms;
-    outline: none;
-    cursor: pointer;
-
-    &:hover {
-      transform: scale(1.05);
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-  }
-
   .feed {
     width: 80%;
 
@@ -31,12 +13,14 @@
         p {
           margin: 0;
           margin-right: 10px;
+          padding: 10px;
+          line-height: 14px;
         }
 
-        button {
-          background: white;
-          color: blue;
-        }
+        // button {
+        //   background: white;
+        //   color: blue;
+        // }
       }
     }
   }
@@ -60,10 +44,10 @@
       input {
         margin-right: 5px;
         padding-left: 10px;
-        height: 33px;
+        height: 36px;
         outline: none;
         border-radius: 6px;
-        border: 1px solid blue;
+        border: 1px solid #3f51b5;
       }
     }
   }

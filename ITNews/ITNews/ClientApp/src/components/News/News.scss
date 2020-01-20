@@ -23,12 +23,20 @@
       border-radius: 8px;
       text-decoration: none;
       color: inherit;
+      transition: 200ms;
     }
 
     .category {
       border: 1px solid violet;
+
       &:hover {
         color: violet;
+        transform: scale(1.05);
+      }
+
+      &:active {
+        color: white;
+        background: violet;
       }
     }
 
@@ -37,6 +45,12 @@
 
       &:hover {
         color: green;
+        transform: scale(1.05);
+      }
+
+      &:active {
+        color: white;
+        background: green;
       }
     }
   }

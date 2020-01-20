@@ -4,11 +4,32 @@ a {
 }
 
 code {
-  color: #E01A76;
+  color: #e01a76;
 }
 
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+button {
+  transition: 200ms;
+  outline: none;
+  cursor: pointer;
+}
+
+button.btn-blue {
+  background: blue;
+  color: white;
+  border-radius: 6px;
+  border: 1px solid blue;
+}
+
+button.btn-blue:hover {
+  transform: scale(1.05);
+}
+
+button.btn-blue:active {
+  transform: scale(0.95);
 }

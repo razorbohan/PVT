@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
 import './Home.scss'
+import React, { Component } from 'react';
+import Calendar from 'react-calendar'
+import Button from '@material-ui/core/Button';
 import News from '../../components/News/News'
 import Tags from '../../components/Tags/Tags';
-import Categories from '../../components/Categories/Categories';
+import List from '../../components/List/List';
 
-
-export class Home extends Component {
+class Home extends Component {
 
   constructor(props) {
     super(props);
@@ -46,7 +47,7 @@ export class Home extends Component {
   }
 
   async fetchNews() {
-    const { category, tag, search } = this.props.match.params;
+    const { category, tag, search, date } = this.props.match.params;
 
     let news;
 
@@ -55,6 +56,9 @@ export class Home extends Component {
       news = await reponse.json();
     } else if (!!tag) {
       const reponse = await fetch(`/api/GetNewsByTag/${tag}`);
+      news = await reponse.json();
+    } else if (!!date) {
+      const reponse = await fetch(`/api/GetNewsByDate/${date}`);
       news = await reponse.json();
     } else if (!!search) {
       const reponse = await fetch(`/api/SearchNews/${search}`);
@@ -67,7 +71,7 @@ export class Home extends Component {
     this.setState({
       news,
       filter: {
-        category, tag, search
+        category, tag, search, date
       }
     }, () => {
       console.log(news);
@@ -83,16 +87,22 @@ export class Home extends Component {
   }
 
   filter() {
-    const { category, tag, search } = this.state.filter;
+    const { category, tag, search, date } = this.state.filter;
 
-    if (category || tag || search) {
+    if (category || tag || search || date) {
       return (
         <div className='filter'>
           <div className='filter-item'>
             {category ? <p>Category: '{decodeURIComponent(category)}'</p> : null}
             {tag ? <p>Tag: '{decodeURIComponent(tag)}'</p> : null}
             {search ? <p>Search text: '{decodeURIComponent(search)}'</p> : null}
-            <button onClick={() => this.onReset()}>Reset</button>
+            {date ? <p>Date: '{new Date(decodeURIComponent(date)).toLocaleDateString()}'</p> : null}
+            <Button
+              variant='outlined'
+              color='primary'
+              onClick={() => this.onReset()}>
+              Reset
+            </Button>
           </div>
         </div>
       )
@@ -127,16 +137,22 @@ export class Home extends Component {
               value={this.state.search}
               onChange={(e) => this.setState({ search: e.target.value })}
             />
-            <button
+            <Button
+              variant='outlined'
+              color='primary'
               onClick={() => this.onSearch()}>
               Search
-            </button>
+            </Button>
           </div>
 
-          <Categories categories={this.state.categories} />
+          <List
+            name='Categories'
+            items={this.state.categories}
+            onChange={(category) => this.props.history.push(`/news/category/${encodeURIComponent(category)}`)} />
 
           <div className='calendar'>
-            Calendar
+            <Calendar
+              onChange={(date) => this.props.history.push(`/news/date/${encodeURIComponent(date.toISOString())}`)} />
           </div>
 
           <div className='tags-cloud'>
@@ -148,9 +164,9 @@ export class Home extends Component {
   }
 }
 
-//TODO: all categories (on the right)
-//TODO: date filtering (calendar)
-//TODO: news creation page
+export default Home
+
+//TODO: news creation page (success/error, clear form)
 //TODO: user profile page (photo, registration date)
 //TODO: SSO (Google, Facebook, VK) 
 //TODO: users editing page

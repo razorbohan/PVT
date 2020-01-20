@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITNews.Logic;
 using ITNews.Models;
+using ITNews.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,14 @@ namespace ITNews.Controllers
             return NewsService.GetNewsByTag(tag);
         }
 
+        // GET: api/GetNewsByDate/21-01-2020:14-10-33
+        [AllowAnonymous]
+        [HttpGet("GetNewsByDate/{date}")]
+        public IEnumerable<News> GetNewsByDate(DateTime date)
+        {
+            return NewsService.GetNewsByDate(date);
+        }
+
         // GET: api/SearchNews/php
         [AllowAnonymous]
         [HttpGet("SearchNews/{search}")]
@@ -73,8 +82,27 @@ namespace ITNews.Controllers
 
         // POST: api/AddNews
         [HttpPost("AddNews")]
-        public IActionResult AddNews(News news)
+        public IActionResult AddNews(NewsModel newsModel)
         {
+            var category = NewsService.GetCategories().FirstOrDefault(x => x.Name == newsModel.Category);
+            var tags = NewsService.GetTags().Where(x => newsModel.Tags.Contains(x.Name)).ToList();
+
+            var news = new News
+            {
+                Name = newsModel.Name,
+                //Created = newsModel.Created,
+                ShortDescription = newsModel.ShortDescription,
+                Description = newsModel.Description,
+                Category = category,
+                Tags = new List<NewsTags>()
+            };
+
+            tags.ForEach(tag => news.Tags.Add(new NewsTags
+            {
+                News = news,
+                Tag = tag
+            }));
+
             NewsService.AddNews(news);
 
             return Ok();
@@ -95,6 +123,14 @@ namespace ITNews.Controllers
         public IEnumerable<Tag> GetTags()
         {
             return NewsService.GetTags();
+        }
+
+        // GET: api/GetCategories
+        [AllowAnonymous]
+        [HttpGet("GetCategories")]
+        public IEnumerable<Category> GetCategories()
+        {
+            return NewsService.GetCategories();
         }
     }
 }

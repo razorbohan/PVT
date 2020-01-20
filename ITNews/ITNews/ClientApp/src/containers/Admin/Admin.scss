@@ -1,0 +1,22 @@
+.admin {
+  .title {
+    margin-bottom: 30px;
+  }
+
+  .name,
+  .category,
+  .tags,
+  .short,
+  .description {
+    margin-bottom: 10px;
+
+    & > span {
+      display: block;
+    }
+
+    // *:not(span) {
+    //   margin-bottom: 10px;
+    //   width: 200px;
+    // }
+  }
+}
