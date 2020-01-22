@@ -1,16 +1,21 @@
-import './Admin.scss'
+import './CreateEditNews.scss'
 import React, { Component } from 'react'
 import List from '../../components/List/List';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, Snackbar, IconButton } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
+import CloseIcon from '@material-ui/icons/Close';
 
-class Admin extends Component {
+class CreateEditNews extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
             allTags: [],
-            allCategories: []
+            allCategories: [],
+            isAlert: false,
+            severity: 'success',
+            status: ''
         };
     }
 
@@ -43,7 +48,7 @@ class Admin extends Component {
 
         console.log(formData);
 
-        await fetch('/api/AddNews', {
+        const response = await fetch('/api/AddNews', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -51,7 +56,19 @@ class Admin extends Component {
             body: JSON.stringify(formData)
         });
 
-        
+        if (response.ok) {
+            this.setState({
+                isAlert: true,
+                severity: 'success',
+                status: 'News successfuly created!'            
+            }, () => window.location.reload());
+        } else {
+            this.setState({
+                isAlert: true,
+                severity: 'error',
+                status: 'Error creating news!'
+            });
+        }
     }
 
     render() {
@@ -110,9 +127,29 @@ class Admin extends Component {
                     onClick={() => this.handleCreate()}>
                     Create
                 </Button>
+
+                <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    //key={`${vertical},${horizontal}`}
+                    open={this.state.isAlert}
+                    onClose={() => this.setState({ isAlert: false })}
+                    autoHideDuration={3000}
+                    action={
+                        <IconButton size='small' color='inherit' onClick={() => this.setState({ isAlert: false })}>
+                            <CloseIcon fontSize='small' />
+                        </IconButton>
+                    }>
+                    <MuiAlert
+                        elevation={6}
+                        variant='filled'
+                        severity='success'
+                        onClose={() => this.setState({ isAlert: false })}>
+                        {this.state.status}
+                    </MuiAlert >
+                </Snackbar>
             </div>
         )
     }
 }
 
-export default Admin
+export default CreateEditNews

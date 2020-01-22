@@ -73,7 +73,7 @@ namespace ITNews.Controllers
 
         // POST: api/DeleteNews
         [HttpPost("DeleteNews")]
-        public IActionResult DeleteNews(int id)
+        public IActionResult DeleteNews([FromBody] int id)
         {
             NewsService.DeleteNews(id);
 

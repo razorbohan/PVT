@@ -7,8 +7,6 @@ export class AuthorizeService {
     _user = null;
     _isAuthenticated = false;
 
-    // By default pop ups are disabled because they don't work properly on Edge.
-    // If you want to enable pop up authentication simply set this flag to false.
     _popUpDisabled = true;
 
     async isAuthenticated() {
@@ -32,14 +30,6 @@ export class AuthorizeService {
         return user && user.access_token;
     }
 
-    // We try to authenticate the user in three different ways:
-    // 1) We try to see if we can authenticate the user silently. This happens
-    //    when the user is already logged in on the IdP and is done using a hidden iframe
-    //    on the client.
-    // 2) We try to authenticate the user using a PopUp Window. This might fail if there is a
-    //    Pop-Up blocker or the user has disabled PopUps.
-    // 3) If the two methods above fail, we redirect the browser to the IdP to perform a traditional
-    //    redirect flow.
     async signIn(state) {
         await this.ensureUserManagerInitialized();
         try {
@@ -90,11 +80,6 @@ export class AuthorizeService {
         }
     }
 
-    // We try to sign out the user in two different ways:
-    // 1) We try to do a sign-out using a PopUp Window. This might fail if there is a
-    //    Pop-Up blocker or the user has disabled PopUps.
-    // 2) If the method above fails, we redirect the browser to the IdP to perform a traditional
-    //    post logout redirect flow.
     async signOut(state) {
         await this.ensureUserManagerInitialized();
         try {

@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using ITNews.Data;
 using ITNews.Models;
 using ITNews.Logic;
+using ITNews.Areas.Identity.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace ITNews
 {
@@ -50,9 +52,28 @@ namespace ITNews
 
             services.AddTransient<INewsRepository, NewsRepository>();
             services.AddTransient<INewsService, NewsService>();
+            services.AddTransient<IEmailSender, EmailSender>(emailSender => new EmailSender(Configuration["SendGridKey"]));
 
             services.AddAuthentication()
-                .AddIdentityServerJwt();
+                .AddIdentityServerJwt()
+                 .AddVkontakte(vkOptions =>
+                 {
+                     vkOptions.ClientId = Configuration["VkClientId"];
+                     vkOptions.ClientSecret = Configuration["VkClientSecret"];
+                     vkOptions.CallbackPath = "/signin-vkontakte";
+                 })
+                .AddFacebook(facebookOptions =>
+                {
+                    facebookOptions.AppId = Configuration["FacebookAppId"];
+                    facebookOptions.AppSecret = Configuration["FacebookAppSecret"];
+                    facebookOptions.CallbackPath = "/signin-facebook";
+                })
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = Configuration["GoogleClientId"];
+                    googleOptions.ClientSecret = Configuration["GoogleClientSecret"];
+                    googleOptions.CallbackPath = "/signin-google";
+                });
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);

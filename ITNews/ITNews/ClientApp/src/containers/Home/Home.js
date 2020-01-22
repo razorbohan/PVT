@@ -166,14 +166,11 @@ class Home extends Component {
 
 export default Home
 
-//TODO: news creation page (success/error, clear form)
-//TODO: user profile page (photo, registration date)
-//TODO: SSO (Google, Facebook, VK) 
 //TODO: users editing page
-
+//TODO: user profile page (photo, registration date)
 //TODO: registration age (16+)
-//TODO: registration confirming (email)
 //TODO: comments, likes, rating
+
 //TODO: news paging
 //TODO: language changing (en, ru)
-//TODO: nihgt/day mode
+//TODO: night/day mode
