@@ -39,6 +39,12 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200113013540_TagsNewsuj.cs" />
     <Compile Remove="Data\Migrations\20200113013540_TagsNewsuj.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200123030636_Comments.cs" />
+    <Compile Remove="Data\Migrations\20200123030636_Comments.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

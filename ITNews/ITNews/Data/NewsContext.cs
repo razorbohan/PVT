@@ -14,6 +14,7 @@ namespace ITNews.Data
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +25,7 @@ namespace ITNews.Data
             news.Property(c => c.ShortDescription).IsRequired().HasMaxLength(500);
             news.Property(c => c.Description).IsRequired().HasMaxLength(5000);
             news.HasOne(s => s.Category).WithMany(s => s.News).IsRequired();
+            news.HasMany(s => s.Comments).WithOne(s => s.News);
 
             var category = modelBuilder.Entity<Category>();
             category.ToTable("Categories");
@@ -57,6 +59,12 @@ namespace ITNews.Data
                  .HasOne(p => p.Tag)
                  .WithMany(p => p.News)
                  .HasForeignKey(p => p.TagId);
+
+            var comment = modelBuilder.Entity<Comment>();
+            comment.ToTable("Comments");
+            comment.Property(c => c.Body).IsRequired().IsUnicode().HasMaxLength(300);
+            comment.Property(c => c.UserId).IsRequired();
+            comment.HasOne(s => s.News).WithMany(s => s.Comments);
         }
     }
 }

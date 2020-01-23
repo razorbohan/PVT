@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ITNews.Controllers
 {
-    //[Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [ApiController]
     [Route("api")]
     public class ApiController : ControllerBase
@@ -82,7 +82,7 @@ namespace ITNews.Controllers
 
         // POST: api/AddNews
         [HttpPost("AddNews")]
-        public IActionResult AddNews(NewsModel newsModel)
+        public IActionResult AddNews(NewsViewModel newsModel)
         {
             var category = NewsService.GetCategories().FirstOrDefault(x => x.Name == newsModel.Category);
             var tags = NewsService.GetTags().Where(x => newsModel.Tags.Contains(x.Name)).ToList();
@@ -131,6 +131,35 @@ namespace ITNews.Controllers
         public IEnumerable<Category> GetCategories()
         {
             return NewsService.GetCategories();
+        }
+
+        // GET: api/GetNewsComments/2
+        [AllowAnonymous]
+        [HttpGet("GetNewsComments/{id}")]
+        public IEnumerable<Comment> GetNewsComments(int id)
+        {
+            return NewsService.GetNewsComments(id);
+        }
+
+        // POST: api/AddNewsComments
+        [AllowAnonymous]
+        [HttpPost("AddNewsComments")]
+        public IActionResult AddNewsComments(CommentViewModel commentModel)
+        {
+            var news = NewsService.GetNews(commentModel.NewsId);
+
+            var comment = new Comment
+            {
+                Body = commentModel.Body,
+                UserId = commentModel.UserId,
+                News = news
+            };
+
+            //news.Comments.Add(comment);
+
+            NewsService.AddNewsComments(comment);
+
+            return Ok();
         }
     }
 }

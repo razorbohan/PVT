@@ -1,10 +1,8 @@
-﻿using ITNews.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ITNews.ViewModels
 {
-    public class NewsModel
+    public class NewsViewModel
     {
         public string Name { get; set; }
         //public DateTime Created { get; set; }

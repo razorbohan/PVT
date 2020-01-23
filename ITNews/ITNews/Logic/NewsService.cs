@@ -20,6 +20,8 @@ namespace ITNews.Logic
         void DeleteNews(int newsId);
         IEnumerable<Tag> GetTags();
         IEnumerable<Category> GetCategories();
+        IEnumerable<Comment> GetNewsComments(int newsId);
+        void AddNewsComments(Comment comment);
     }
     public class NewsService : INewsService
     {
@@ -86,6 +88,16 @@ namespace ITNews.Logic
         public IEnumerable<Category> GetCategories()
         {
             return NewsRepository.GetAllCategories();
+        }
+
+        public IEnumerable<Comment> GetNewsComments(int newsId)
+        {
+            return NewsRepository.GetNewsComments(newsId);
+        }
+
+        public void AddNewsComments(Comment comment)
+        {
+            NewsRepository.AddNewsComments(comment);
         }
     }
 }

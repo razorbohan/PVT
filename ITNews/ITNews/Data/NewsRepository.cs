@@ -16,6 +16,8 @@ namespace ITNews.Data
 
         List<Category> GetAllCategories();
         List<Tag> GetAllTags();
+        List<Comment> GetNewsComments(int id);
+        void AddNewsComments(Comment comment);
     }
 
     public class NewsRepository : INewsRepository
@@ -58,6 +60,19 @@ namespace ITNews.Data
                     .ThenInclude(x => x.News)
                         .ThenInclude(x => x.Category)
                  .ToList();
+        }
+
+        public List<Comment> GetNewsComments(int id)
+        {
+            return Context.Comments
+                .Where(comment => comment.News.Id == id)
+                .ToList();
+        }
+
+        public void AddNewsComments(Comment comment)
+        {
+            Context.Comments.Add(comment);
+            Context.SaveChanges();
         }
 
         public void Create(News news)

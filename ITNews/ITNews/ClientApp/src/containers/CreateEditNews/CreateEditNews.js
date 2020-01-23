@@ -13,6 +13,10 @@ class CreateEditNews extends Component {
         this.state = {
             allTags: [],
             allCategories: [],
+            news: null,
+
+            isEdit: false,
+
             isAlert: false,
             severity: 'success',
             status: ''
@@ -22,6 +26,20 @@ class CreateEditNews extends Component {
     async componentDidMount() {
         await this.fetchTags();
         await this.fetchCategories();
+
+        const { id } = this.props.match.params;
+        if (!!id) {
+            this.setState({
+                isEdit: true
+            }, async () => {
+                const reponse = await fetch(`/api/GetNews/${id}`);
+                const news = await reponse.json();
+
+                this.setState({
+                    news
+                });
+            });
+        }
     }
 
     async fetchCategories() {
@@ -60,7 +78,7 @@ class CreateEditNews extends Component {
             this.setState({
                 isAlert: true,
                 severity: 'success',
-                status: 'News successfuly created!'            
+                status: 'News successfuly created!'
             }, () => window.location.reload());
         } else {
             this.setState({
@@ -75,7 +93,7 @@ class CreateEditNews extends Component {
         return (
             <div className='admin'>
                 <div className='title'>
-                    <h2>Add news</h2>
+                    <h2>{this.state.isEdit ? 'Update news' : 'Add news'}</h2>
                 </div>
 
                 <div className='name'>
@@ -125,7 +143,7 @@ class CreateEditNews extends Component {
                     variant='contained'
                     color='primary'
                     onClick={() => this.handleCreate()}>
-                    Create
+                    {this.state.isEdit ? 'Update' : 'Create'}
                 </Button>
 
                 <Snackbar

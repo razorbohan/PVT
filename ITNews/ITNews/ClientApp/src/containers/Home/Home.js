@@ -168,9 +168,9 @@ export default Home
 
 //TODO: users editing page
 //TODO: user profile page (photo, registration date)
-//TODO: registration age (16+)
 //TODO: comments, likes, rating
 
+//TODO: news editing page (finish edit)
 //TODO: news paging
 //TODO: language changing (en, ru)
 //TODO: night/day mode

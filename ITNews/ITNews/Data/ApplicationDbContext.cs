@@ -16,6 +16,12 @@ namespace ITNews.Data
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
+            Database.EnsureCreated();
         }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+
+        //}
     }
 }

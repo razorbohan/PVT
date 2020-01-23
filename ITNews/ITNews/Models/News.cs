@@ -12,5 +12,6 @@ namespace ITNews.Models
         public string Description { get; set; }
         public Category Category { get; set; }
         public List<NewsTags> Tags { get; set; }
+        public List<Comment> Comments { get; set; }
     }
 }

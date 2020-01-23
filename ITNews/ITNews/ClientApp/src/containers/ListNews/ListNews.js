@@ -1,6 +1,7 @@
 import './ListNews'
 import React, { Component } from 'react'
 import MaterialTable from 'material-table';
+import { Button, Snackbar, IconButton } from '@material-ui/core';
 
 export class ListNews extends Component {
 
@@ -64,12 +65,22 @@ export class ListNews extends Component {
     }
 
     async EditNews(id) {
-        this.props.history.push(`/createeditnews/${id}`);
+        if (!!id)
+            this.props.history.push(`/createeditnews/${id}`);
+        else this.props.history.push(`/createeditnews`);
     }
 
     render() {
         return (
             <div className='list-news'>
+
+                <Button
+                    variant='contained'
+                    color='primary'
+                    style={{ margin: '10px' }}
+                    onClick={() => this.EditNews()}>
+                    Add News
+                </Button>
 
                 <MaterialTable
                     title='News'
